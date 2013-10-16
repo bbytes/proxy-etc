@@ -9,3 +9,4 @@ Feature :
  3. HTTP reverse proxy
  4. Avoid dog pile effect.
  5. It uses etcd to dynamically switch application 
+ 6. Load balancing (support sticky and non sticky with auto update of failed nodes)
