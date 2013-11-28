@@ -28,9 +28,15 @@ How to get going :
  
 Running the application : 
 
-From the command prompt run - node app.js . You should be able to see a Login page at http://localhost:3000/
-Admin user credentials : Username : admin
-              Password : admin
+ 1. From the command prompt run - node app.js . You should be able to see a Login page at http://localhost:3000/
+ 2. Login with Admin user credentials : Username : admin, Password : admin
+ 3. Add routes to proxy-etc. For example : prefix : errzero, host : 192.168.1.179, port : 8080
+ 4. Now you can access errzero running on 192.168.1.179 machine from proxy-etc which is running on localhost 3000 with url  : http://localhost:3000/errzero
+              
+              
+              
+              
+              
  
  
  
