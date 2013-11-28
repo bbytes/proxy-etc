@@ -2,10 +2,11 @@
  * Initialization of application
  */
 
-module.exports = function(app, express, path, dirname, passport) {
+module.exports = function(app, express, path, dirname, passport, config) {
 
 	// all environments
-	app.set('port', process.env.PORT || 3000);
+	app.set('port', process.env.PORT || config.app.port);
+	app.set('title', config.app.name);
 	app.set('views', dirname + '/views');
 	app.set('view engine', 'jade');
 	app.use(express.favicon());

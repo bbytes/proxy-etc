@@ -11,12 +11,12 @@ var express = require('express')
 
 var app = express();
 
-var expressConfig = require('./config/express');
-expressConfig(app, express, path, __dirname, passport);
-
 var env = process.env.NODE_ENV || 'development'
 , config = require('./config/config')[env]
 , db = new Db(config.dbPath, {});
+
+var expressConfig = require('./config/express');
+expressConfig(app, express, path, __dirname, passport, config);
 
 var passportConf =  require('./config/passport');
 passportConf(passport, db, config);

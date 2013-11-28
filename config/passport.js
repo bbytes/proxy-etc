@@ -16,13 +16,21 @@ module.exports = function(passport, db, config) {
 				role : "ADMIN_USER"
 			};
 			userDao.save(userJson, function(error, result) {
-				console.log('user details saved');
+				if(error){
+					console.log('failed to save user details');
+				} else {
+					console.log('user details saved');
+				}
 			});
 		} else {
 			result.username = config.credentials.username;
 			result.password = config.credentials.password;
-			userDao.save(result, function(error, result) {
-				console.log('user details updated');
+			userDao.update({role : 'ADMIN_USER'}, result, function(error, result) {
+				if(error){
+					console.log('failed to update user details');
+				} else {
+					console.log('user details updated');
+				}
 			});
 		}
 	});

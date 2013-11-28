@@ -4,7 +4,8 @@ module.exports = {
 	development : {
 		dbPath : 'C://tingoDB//data',
 		app : {
-			name : 'proxy-etc'
+			name : 'proxy-etc',
+			port : 3000
 		},
 		credentials : {
 			username : "admin",
@@ -14,11 +15,12 @@ module.exports = {
 	test : {
 		dbPath : 'C://tingoDB//data',
 		app : {
-			name : 'proxy-etc'
+			name : 'proxy-etc',
+			port : 3000
 		},
 		credentials : {
-			username : "proxy",
-			password : "proxy"
+			username : "admin",
+			password : "admin"
 		}
 	},
 	production : {}

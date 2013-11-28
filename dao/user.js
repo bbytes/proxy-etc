@@ -49,3 +49,9 @@ exports.deleteAll = function(callback) {
 		callback(error, result);
 	});
 };
+
+exports.update = function(query, jsonData, callback) {
+	collection.update(query, jsonData, function(error, result) {
+		callback(error, result);
+	});
+};
