@@ -6,8 +6,7 @@ var httpProxy = require("http-proxy");
 var proxy = new httpProxy.RoutingProxy();
 var routesDao = require("../dao/routes");
 
-var routesJson = {'errzero' : {prefix : 'errzero', host : 'localhost', port : 8080},
-		'endure' : {prefix : 'endure', host : '203.196.144.235', port : 8089}};
+var routesJson = null;
 
 exports.init = function(db){
 	routesDao.init(db);
