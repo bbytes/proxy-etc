@@ -19,7 +19,7 @@ How to get going :
  
  1. Install Node.js for your operating system.
  2. Create a folder for tingoDB local system.
- 3. Get a copy of code - https://github.com/bbytes/MAMA.git to your local directory.
+ 3. Get a copy of code - https://github.com/bbytes/proxy-etc.git to your local directory.
  4. Run the command - npm install -d - in Node command prompt after changing to your cloned directory.
     This should install the dependencies currently added in package.json file.
  5. Set path of your tingoDB folder to dbPath property in config/config.js.
