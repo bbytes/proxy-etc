@@ -1,0 +1,17 @@
+{
+  "name": "proxy-etc",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "3.3.4",
+    "jade": "*",
+    "http-proxy": "0.8.5",
+    "connect-restreamer" : "1.0.0",
+    "tingodb" : "latest",
+    "passport" : "latest",
+    "passport-local" : "latest"
+  }
+}

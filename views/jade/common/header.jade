@@ -1,0 +1,13 @@
+.navbar.navbar-inverse.navbar-fixed-top
+  .navbar-inner
+    .container(ng-controller='logoutController')
+      a.btn.btn-navbar(data-target='.nav-collapse', data-toggle='collapse')
+        span.icon-bar
+        span.icon-bar
+        span.icon-bar
+      a.brand(href='')
+        img(style='height: 20px;', src='', alt='Proxy-etc')
+      .nav-collapse.collapse.pull-right
+        ul#nav-header.nav
+          li#logout(ng-show='isLoggedIn == true')
+            a(href='javascript:;' ng-click='logout()') Log out
