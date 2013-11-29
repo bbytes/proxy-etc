@@ -1,5 +1,5 @@
 /*
- * Dao for routes
+ * Dao for user
  */
 
 var collection = null;
