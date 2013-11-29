@@ -1,6 +1,6 @@
 
 /*
- * GET login page.
+ * Login Controller
  */
 
 exports.index = function(req, res){

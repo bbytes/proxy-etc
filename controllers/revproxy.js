@@ -1,5 +1,5 @@
 /*
- * Reverse Proxy
+ * Reverse Proxy controller
  */
 
 var httpProxy = require("http-proxy");

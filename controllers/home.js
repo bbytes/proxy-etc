@@ -1,5 +1,5 @@
 /*
- * Reverse Proxy
+ * Home controller
  */
 
 exports.getHomePage = function(req, res) {

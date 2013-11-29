@@ -1,5 +1,5 @@
 /*
- * Reverse Proxy
+ * Routes controller
  */
 
 var routesDao = require("../dao/routes");
