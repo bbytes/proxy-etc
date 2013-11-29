@@ -35,12 +35,12 @@ div.content(style='min-height: 200px; width:800px; margin : 0px 60px;')
           .modal-text
             input(type='text', value='', name='port', ng-model='route.port')
       .modal-footer
-        button.btn(data-dismiss='modal', aria-hidden='true') Close
+        button.btn(data-dismiss='modal', aria-hidden='true') Cancel
         button.btn.btn-primary(data-dismiss='modal', ng-click='saveRoute()') OK
 
 #deleteRouteModal.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
     .modal-body
         | Are you sure you want to delete route?
       .modal-footer
-        button.btn(data-dismiss='modal', aria-hidden='true') Close
+        button.btn(data-dismiss='modal', aria-hidden='true') Cancel
         button.btn.btn-primary(type='submit', data-dismiss='modal', ng-click='deleteRoute()') OK
