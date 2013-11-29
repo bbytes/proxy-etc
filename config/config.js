@@ -1,4 +1,6 @@
-
+/**
+ * Configuration for application
+ */
 
 module.exports = {
 	development : {
