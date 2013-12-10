@@ -1,0 +1,45 @@
+button.btn.btn-success.pull-right(data-toggle='modal' data-target='#routeModal', style='width: 70px;' ng-click='openModal(null, \'add\')') Add
+h2 Routes
+table.table.table-bordered
+  thead
+    tr
+      th Source
+      th Targets
+      th Session type
+      th Action
+      th Action
+  tbody
+    tr(ng-repeat='route in routes')
+      td {{route.source}}
+      td
+       .targetRow(ng-repeat = 'target in route.targets') {{target.host}}:{{target.port}}
+      td {{route.sessionType}}
+      td
+        button.btn.btn-danger(style='width: 70px;' data-toggle='modal' data-target='#routeModal' ng-click='openModal(route, \'edit\')') Edit
+      td
+        button.btn.btn-danger(style='width: 70px;' data-toggle='modal' data-target='#deleteRouteModal' ng-click='deleteRouteModal(route._id)') Delete
+        
+               
+#routeModal.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+    .modal-body
+        .modal-box
+          .modal-label Source
+          .modal-text
+            input(type='text', value='', name='source', placeholder='source' ng-model='selectedRoute.source' style='width : 300px;')
+        .modal-box(ng-repeat='target in selectedRoute.targets')
+          .modal-label Target
+          .modal-text
+             input(type='text', value='', name='target', placeholder='host', ng-model='selectedRoute.targets[$index].host' style='width : 180px; float : left')
+             input(type='text', value='', name='target', placeholder='port', ng-model='selectedRoute.targets[$index].port' style='width : 100px; float : left; margin-left:4px;')
+             button.btn.btn-inverse(style='margin-left:5px;' ng-click='addRemoveTarget($index)')
+               i(ng-class='{\'icon-plus-sign icon-white\' : $index==0, \'icon-remove-sign icon-white\' : $index!=0}')
+        .modal-box
+          .modal-label Session Type
+          .modal-text(style='margin-top : 5px;')
+            input(type='radio', value='Sticky', name='sticky', ng-model='selectedRoute.sessionType', style='margin-top:-1px;') 
+            |   Sticky
+            input(type='radio', value='Non Sticky', name='non-sticky', ng-model='selectedRoute.sessionType', style='margin-top:-1px; margin-left: 70px;') 
+            |   Non Sticky                   
+      .modal-footer
+        button.btn(data-dismiss='modal', aria-hidden='true', ng-click='cancelSave()') Cancel
+        button.btn.btn-primary(data-dismiss='modal', ng-click='saveRoute()') OK

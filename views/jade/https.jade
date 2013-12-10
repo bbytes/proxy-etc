@@ -1,0 +1,19 @@
+button.btn.btn-success.pull-right(data-toggle='modal' data-target='#routeModal', style='width: 70px;' ng-click='openModal(null, \'add\')') Add
+h2 Routes
+table.table.table-bordered
+  thead
+    tr
+      th Source
+      th Target host
+      th Target port
+      th Action
+      th Action
+  tbody
+    tr(ng-repeat='route in routes')
+      td {{route.prefix}}
+      td {{route.host}}
+      td {{route.port}}
+      td
+        button.btn.btn-danger(style='width: 70px;' data-toggle='modal' data-target='#routeModal' ng-click='openModal(route, \'edit\')') Edit
+      td
+        button.btn.btn-danger(style='width: 70px;' data-toggle='modal' data-target='#deleteRouteModal' ng-click='deleteRouteModal(route._id)') Delete
