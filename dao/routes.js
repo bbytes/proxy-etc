@@ -15,7 +15,7 @@ var updateRoutesJson = function() {
 		routesJson = {};
 		if (result != null) {
 			for ( var i = 0; i < result.length; i++) {
-				var key = result[i].prefix;
+				var key = result[i].source;
 				routesJson[key] = result[i];
 			}
 		}
@@ -24,6 +24,10 @@ var updateRoutesJson = function() {
 
 exports.getRoutesJson = function(){
 	return routesJson;
+};
+
+exports.setRoute = function(key, route){
+	routesJson[key] = route;
 };
 
 exports.save = function(jsonData, callback) {
@@ -49,9 +53,9 @@ exports.getAll = function(callback) {
 		callback(error, result);
 	});
 };
-exports.getByPrefix = function(prefix, callback) {
+exports.getBySource = function(source, callback) {
 	collection.findOne({
-		prefix : prefix
+		source : source
 	}, function(error, result) {
 		callback(error, result);
 	});
