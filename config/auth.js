@@ -16,3 +16,11 @@ function isAuthenticated(req, res, next) {
 	else
 		next();
 }
+
+/*function secureOnly(req, res, next) {
+	  if (!req.secure) {
+	    res.send(426, 'sorry')
+	  else {
+	    next()
+	  }
+}*/

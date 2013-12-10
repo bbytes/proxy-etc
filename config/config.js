@@ -3,12 +3,21 @@
  */
 
 module.exports = {
+	environment : 'development',
 	development : {
 		dbPath : 'C://tingoDB//data',
 		app : {
 			name : 'proxy-etc',
-			port : 3000
+			hostname : 'localhost'
 		},
+		http : {
+			port : 80,
+		},
+/*		https : {
+			port : 443,
+			keyPath : './config/keys/4946453_localhost.key',
+			certPath : './config/keys/4946453_localhost.cert'
+		},*/
 		credentials : {
 			username : "admin",
 			password : "admin"
@@ -18,8 +27,16 @@ module.exports = {
 		dbPath : 'C://tingoDB//data',
 		app : {
 			name : 'proxy-etc',
-			port : 3000
+			hostname : 'localhost'
 		},
+		http : {
+			port : 80,
+		},
+/*		https : {
+			port : 443,
+			keyPath : './config/keys/4946453_localhost.key',
+			certPath : './config/keys/4946453_localhost.cert'
+		},*/
 		credentials : {
 			username : "admin",
 			password : "admin"

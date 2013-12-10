@@ -9,7 +9,7 @@ module.exports = function(app, db, passport, auth) {
 	routes.init(db);
 
 	app.get('/login', login.login);
-	app.get('/', login.index);
+	app.get('/proxy', login.index);
 
 	app.post('/authenticate', auth, passport.authenticate('local', {
 		failureRedirect : '/'
