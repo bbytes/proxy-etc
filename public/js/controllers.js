@@ -14,7 +14,7 @@ function loginController($scope, $location, login) {
 
 function homeController($scope, $location, route) {
 	$scope.routes = null;
-	$scope.route = null;
+	$scope.selectedRoute = null;
 	$scope.action = "";
 
 	$scope.getAllRoutes = function(){
@@ -27,15 +27,23 @@ function homeController($scope, $location, route) {
 
 	$scope.openModal = function(route, action) {
 		if(route == null){
-			$scope.route = {prefix : "", host : "", port : ""};
+			$scope.selectedRoute = {source : "", targets : [{host : "", port : ""}], sessionType : "Sticky"};
 		} else {
-			$scope.route = route;
+			$scope.selectedRoute = route;
 		}
 		$scope.action = action;
 	};
+	
+	$scope.addRemoveTarget = function(index){
+		if(index == 0){
+			$scope.selectedRoute.targets.push({host : "", port : ""});
+		} else {
+			$scope.selectedRoute.targets.splice(index, 1);
+		}
+	};
 
 	$scope.saveRoute = function() {
-		var data = {route : $scope.route};
+		var data = {route : $scope.selectedRoute};
 		if ($scope.action == "add") {
 			$scope.action = "";
 			route.save(data, function(data) {
@@ -47,6 +55,10 @@ function homeController($scope, $location, route) {
 				$scope.getAllRoutes();
 			});
 		}
+	};
+	
+	$scope.cancelSave = function(){
+		$scope.getAllRoutes();
 	};
 	
 	$scope.deleteRouteId = null;
