@@ -29,8 +29,8 @@ How to get going :
  
 Running the application : 
 
- 1. From the command prompt run - node app.js . You should be able to see a Login page at http://hostname/proxy
-    hostname : Its is hostanme in which proxy-etc is running.
+ 1. From the command prompt run - node app.js . You should be able to see a Login page at http://hostname/proxy.
+    hostname : It is hostanme in which proxy-etc is running.
  2. Login with Admin user credentials : Username : admin, Password : admin
  3. Add routes to proxy-etc. For example : source : www.errzero.com, host : 192.168.1.179, port : 8080
  4. Now you can access errzero running on 192.168.1.179 machine from proxy-etc url www.errzero.com.
