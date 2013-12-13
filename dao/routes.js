@@ -2,6 +2,7 @@
  * Dao for routes
  */
 
+var jf = require('jsonfile');
 var collection = null;
 var routesJson = {};
 
@@ -18,6 +19,14 @@ var updateRoutesJson = function() {
 				var key = result[i].source;
 				routesJson[key] = result[i];
 			}
+			
+			jf.writeFile("./config/routes.json", routesJson, function(err) {
+			    if(err) {
+			        console.log(err);
+			    } else {
+			        console.log("The file is saved!");
+			    }
+			}); 
 		}
 	});
 };
