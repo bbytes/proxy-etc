@@ -29,14 +29,16 @@ Master.prototype.readRoutesJson = function(){
         if (err) {
       	  console.error("Error reading file");
         }
-        var routes = JSON.parse(data);
-        for(var key in routes){
-      	    collection.set(key, routes[key], function(err) {
-      	    	  if (err) {
-      	    	    console.error('There was an error');
-      	    	    return;
-      	    	  }
-      	    });
+        if(data && data != undefined && data != null){
+            var routes = JSON.parse(data);
+            for(var key in routes){
+          	    collection.set(key, routes[key], function(err) {
+          	    	  if (err) {
+          	    	    console.error('There was an error');
+          	    	    return;
+          	    	  }
+          	    });
+            }
         }
      });
 };
