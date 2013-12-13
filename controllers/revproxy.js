@@ -2,10 +2,11 @@
  * Reverse Proxy controller
  */
 
+var config = require('../config/config');
 var httpProxy = require("http-proxy");
+//httpProxy.setMaxSockets(config.maxSockets);
 var proxy = new httpProxy.RoutingProxy();
 var routesDao = require("../dao/routes");
-var configObj = require('../config/config'), config = configObj[configObj.environment];
 
 exports.init = function(db) {
 	routesDao.init(db);
@@ -37,11 +38,9 @@ exports.forward = function(req, res, next) {
 			key = "/" + prefix;
 			route = routesJson[key];
 		}
-
 		if (route != null && route.source == config.app.hostname) {
 			route = null;
 		}
-
 	}
 
 	if (!route) {
@@ -85,7 +84,7 @@ exports.forward = function(req, res, next) {
 				port : target.port
 			};
 		}
-		console.log("proxy------" + "host : " + host.host + ", port : " + host.port);
+		//console.log("proxy------" + "host : " + host.host + ", port : " + host.port);
 		req.host = Object.create(host);
 		res.setHeader("x-served-by", "http://" + host.host + ":" + host.port);
 		proxy.proxyRequest(req, res, host);
