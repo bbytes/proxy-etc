@@ -2,6 +2,9 @@ function loginController($scope, $location, login) {
 	$scope.username = "";
 	$scope.password = "";
 	$scope.login = function() {
+		$scope.username = $("#username").val();
+		$scope.password = $("#password").val();
+		
 		var data = "username=" + $scope.username + "&password="
 				+ $scope.password;
 		login.authenticate(data, function(data) {
@@ -9,6 +12,7 @@ function loginController($scope, $location, login) {
 				$location.path("/home");
 			}
 		});
+		return false;
 	};
 }
 
