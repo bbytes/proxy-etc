@@ -109,7 +109,7 @@ To optimize response times and make use of all your available cores, Proxy-etc u
 Each worker monitors its memory usage. If it crosses a given threshold, the worker stops accepting new connections, it lets the current requests complete cleanly, and it stops itself; it is then replaced by a new copy by the master process.
 
 
-## TO-DO
+### TO-DO
 * __Auto detection of server node failure and send alert as email__
 * __OS integration__
 * __TCP proxy [for mysql]__
