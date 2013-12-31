@@ -80,7 +80,7 @@ master process does not serve any request)
  * __https__ : SSL configuration (omit this section to disable HTTPS) 
  
 
-## Features done 
+## Features implemented 
 
 ### Configure via REST 
   Routes can be added or removed or updated using rest.
