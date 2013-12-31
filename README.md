@@ -33,8 +33,8 @@ Dynamic reverse proxy based on node js.  It uses [etcd](https://github.com/coreo
  2. Login with Admin user credentials : Username : admin, Password : admin
  3. Add routes to proxy-etc. For example : source : www.errzero.com, host : 192.168.1.179, port : 8080
  4. Now you can access errzero running on 192.168.1.179 machine from proxy-etc url www.errzero.com.
-
-      There wiil be two instances of servers. One for UI as Configurad in config.js __app__ property. Another instance for reverse proxy as configured in __http__ and __https__ properties in config.js.
+ 5. There will be two instances of servers running. One for UI as Configurad in config/config.js __app__ property. 
+    Another instance(cluster) for reverse proxy as configured in __http__ and __https__ properties in config/config.js.
             
 
 
