@@ -92,7 +92,7 @@ function proxyRequest(req, res, target) {
 			host : target.host,
 			port : target.port
 		};
-	console.log("proxy------" + "host : " + host.host + ", port : " + host.port);
+	//console.log("proxy------" + "host : " + host.host + ", port : " + host.port);
 	req.host = Object.create(host);
 	res.setHeader("x-served-by", "http://" + host.host + ":" + host.port);
 	proxy.proxyRequest(req, res, host);
@@ -168,7 +168,7 @@ exports.forwardWSRequest = function(req, socket, head){
 };
 
 function proxyWSRequest(req, socket, head, host) {
-	console.log("proxy ws------" + "host : " + host.host + ", port : " + host.port);
+	//console.log("proxy ws------" + "host : " + host.host + ", port : " + host.port);
 	req.host = Object.create(host);
 	res.setHeader("x-served-by", "http://" + host.host + ":" + host.port);
 	

@@ -82,7 +82,7 @@ Worker.prototype.runServer = function () {
         var httpsServer =  https.createServer(options, revproxy.forwardRequest);
         //httpServer.on('connection', tcpConnectionHandler);
         httpsServer.on('upgrade', revproxy.forwardWSRequest);
-        httpsServer.listen(config.port, config.https.hostname);
+        httpsServer.listen(config.https.port, config.https.hostname);
         monitor.addServer(httpsServer);
     }
 };
