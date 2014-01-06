@@ -180,3 +180,55 @@ function proxyWSRequest(req, socket, head, host) {
     });
     proxy.proxyWebSocketRequest(req, socket, head);
 }
+
+
+function startHandler(req, res) {
+    var remoteAddr = getRemoteAddress(req);
+
+    // TCP timeout to 30 sec
+    req.connection.setTimeout(config.tcpTimeout * 1000);
+    // Make sure the listener won't be set again on retry
+    if (req.connection.listeners('timeout').length < 2) {
+        req.connection.once('timeout', function () {
+            req.error = 'TCP timeout';
+        });
+    }
+
+    // Set forwarded headers
+    if (remoteAddr === null) {
+        return errorMessage(res, 'Cannot read the remote address.');
+    }
+    if (remoteAddr.slice(0, 2) !== '::') {
+        remoteAddr = '::ffff:' + remoteAddr;
+    }
+    // Play nicely when behind other proxies
+    if (req.headers['x-forwarded-for'] === undefined) {
+        req.headers['x-forwarded-for'] = remoteAddr;
+    }
+    if (req.headers['x-real-ip'] === undefined) {
+        req.headers['x-real-ip'] = remoteAddr;
+    }
+    if (req.headers['x-forwarded-protocol'] === undefined) {
+        req.headers['x-forwarded-protocol'] = req.connection.pair ? 'https' : 'http';
+    }
+    if (req.headers['x-forwarded-proto'] === undefined) {
+        req.headers['x-forwarded-proto'] = req.connection.pair ? 'https' : 'http';
+    }
+    if (req.headers['x-forwarded-port'] === undefined) {
+        // FIXME: replace by the real port instead of hardcoding it
+        req.headers['x-forwarded-port'] = req.connection.pair ? '443' : '80';
+    }
+};
+
+function getRemoteAddress(req) {
+    if (req.connection === undefined) {
+        return null;
+    }
+    if (req.connection.remoteAddress) {
+        return req.connection.remoteAddress;
+    }
+    if (req.connection.socket && req.connection.socket.remoteAddress) {
+        return req.connection.socket.remoteAddress;
+    }
+    return null;
+};
