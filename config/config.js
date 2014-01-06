@@ -3,16 +3,16 @@
  */
 
 module.exports = {
-	dbPath : 'C://tingoDB//data',
-	maxSockets : 100,
-	workers : 4,
+	dbPath : 'C:/tingoDB/data',
+	maxSockets : 500,
+	//workers : 4,
 	tcpTimeout : 90,
 	httpKeepAlive : true,
 	//UI
 	app : {
 		name : 'proxy-etc',
 		hostname : 'localhost',
-		port : 3000,
+		port : 3333,
 	},
 	
 	//proxy
@@ -23,8 +23,8 @@ module.exports = {
 	https : {
 		hostname : 'localhost',
 		port : 443,
-		keyPath : './config/keys/4946453_localhost.key',
-		certPath : './config/keys/4946453_localhost.cert'
+		keyPath : './config/keys/errzero.private.pem',
+		certPath : './config/keys/errzero.public.pem'
 	},
 	memoryMonitor : {
 		memoryLimit : 100, //MBs
