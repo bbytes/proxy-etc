@@ -12,6 +12,9 @@
     "connect-restreamer" : "1.0.0",
     "tingodb" : "latest",
     "passport" : "latest",
-    "passport-local" : "latest"
-  }
+    "passport-local" : "latest",
+    "strong-store-cluster" : "latest",
+    "jsonfile" : "latest",
+    "request" : "latest"
+   }
 }
