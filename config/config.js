@@ -11,13 +11,13 @@ module.exports = {
 	//UI
 	app : {
 		name : 'proxy-etc',
-		hostname : 'localhost',
+		hostname : '0.0.0.0',
 		port : 3333,
 	},
 	
 	//proxy
 	http : {
-		hostname : 'localhost',
+		hostname : '0.0.0.0',
 		port : 80,
 	},
 	// https : {
