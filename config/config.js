@@ -3,7 +3,7 @@
  */
 
 module.exports = {
-	dbPath : 'C:/tingoDB/data',
+	dbPath : '/opt/bbytes/proxy-etc/data',
 	maxSockets : 500,
 	//workers : 4,
 	tcpTimeout : 90,
