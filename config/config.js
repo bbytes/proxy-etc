@@ -23,8 +23,8 @@ module.exports = {
 	https : {
 		hostname : 'localhost',
 		port : 443,
-		keyPath : './config/keys/errzero.private.pem',
-		certPath : './config/keys/errzero.public.pem'
+		keyPath : './keys/errzero.private.pem',
+		certPath : './keys/errzero.public.pem'
 	},
 	memoryMonitor : {
 		memoryLimit : 100, //MBs
