@@ -23,8 +23,8 @@ module.exports = {
 	https : {
 		hostname : 'localhost',
 		port : 443,
-		keyPath : './keys/errzero.private.pem',
-		certPath : './keys/errzero.public.pem'
+		keyPath : '/opt/bbytes/proxy-etc/config/keys/errzero.private.pem',
+		certPath : '/opt/bbytes/proxy-etc/config/keys/errzero.public.pem'
 	},
 	memoryMonitor : {
 		memoryLimit : 100, //MBs
