@@ -7,9 +7,9 @@ var master = require('./proxy/master')
   , config = require('./config/config')
   , cluster = require('cluster');
 
-/*if (cluster.isMaster) {
+if (cluster.isMaster) {
 	// Run the master
-	master();*/
+	master();
 	
 	var express = require('express')
 		, http = require('http')
@@ -40,11 +40,11 @@ var master = require('./proxy/master')
 		var watchmen = new WatchMen(targetsDao);
 		watchmen.start();
 	});
-/*} else {
+} else {
 	// Run the worker
 	worker();
 }
-*/
+
 
 
 
