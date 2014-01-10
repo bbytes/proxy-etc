@@ -9,5 +9,11 @@
         img(style='height: 20px;', src='', alt='Proxy-etc')
       .nav-collapse.collapse.pull-right
         ul#nav-header.nav
+          li#routes(ng-show='isLoggedIn == true')
+            a(href='#/home') Routes
+        ul#nav-header.nav
+          li#targets(ng-show='isLoggedIn == true')
+            a(href='#/targets') Targets
+        ul#nav-header.nav
           li#logout(ng-show='isLoggedIn == true')
             a(href='javascript:;' ng-click='logout()') Log out

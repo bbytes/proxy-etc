@@ -91,6 +91,48 @@ function logoutController($scope, $rootScope, logout, $location) {
 	};
 }
 
+function targetsController($scope, $rootScope, target, $timeout){
+	$scope.targets = [];
+	var getAllTargets = function(){
+		target.getAllTargets(function(data) {
+			$scope.targets = data;
+			refresh();
+		});
+	};
+	
+	getAllTargets();
+	
+	var refresh = function(){
+	    $timeout(function(){
+	    	getAllTargets();
+	    },10000);
+	};
+
+	$scope.openModal = function(target){
+		$scope.selectedTarget = target;
+		$scope.config = target.config;
+	};
+	
+	$scope.updateTargetConfig = function(){
+		var data = {config : $scope.config, id : $scope.selectedTarget._id};
+		target.updateTargetConfig(data, function(data){
+			getAllTargets();
+		});
+	};
+	
+	$scope.changeEnabled = function(targetId, enabled){
+		var data = {id: targetId, changeEnabled : ''};
+		if(enabled == 'true'){
+			data = {id: targetId, changeEnabled : true};
+		} else if('false'){
+			data = {id: targetId, changeEnabled : false};
+		}
+		target.changeEnabled(data, function(data){
+			getAllTargets();
+		});
+	};
+}
+
 function alertController($scope, $rootScope, $timeout) {
 	$rootScope.closeAlert = function(index) {
 		$rootScope.alerts.splice(index, 1);

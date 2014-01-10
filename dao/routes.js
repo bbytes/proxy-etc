@@ -57,6 +57,14 @@ exports.update = function(query, jsonData, callback) {
 	});
 };
 
+exports.findById = function(id, callback) {
+	collection.findOne({
+		_id : id
+	}, function(error, result) {
+		callback(error, result);
+	});
+};
+
 exports.getAll = function(callback) {
 	collection.find().toArray(function(error, result) {
 		callback(error, result);

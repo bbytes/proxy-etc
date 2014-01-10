@@ -23,18 +23,18 @@ table.table.table-bordered
 #routeModal.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
     .modal-body
         .modal-box
-          .modal-label Source
-          .modal-text
+          .route-modal-label Source
+          .route-route-modal-text
             input(type='text', value='', name='source', placeholder='source' ng-model='selectedRoute.source' style='width : 300px;')
         .modal-box(ng-repeat='target in selectedRoute.targets')
-          .modal-label Target
-          .modal-text
+          .route-modal-label Target
+          .route-modal-text
              input(type='text', value='', name='target', placeholder='host', ng-model='selectedRoute.targets[$index].host' style='width : 180px; float : left')
              input(type='text', value='', name='target', placeholder='port', ng-model='selectedRoute.targets[$index].port' style='width : 100px; float : left; margin-left:4px;')
              button.btn.btn-inverse(style='margin-left:5px;' ng-click='addRemoveTarget($index)')
                i(ng-class='{\'icon-plus-sign icon-white\' : $index==0, \'icon-remove-sign icon-white\' : $index!=0}')
         .modal-box
-          .modal-label Session Type
+          .route-modal-label Session Type
           .modal-text(style='margin-top : 5px;')
             input(type='radio', value='Sticky', name='sticky', ng-model='selectedRoute.sessionType', style='margin-top:-1px;') 
             |   Sticky

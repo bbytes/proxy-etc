@@ -13,6 +13,12 @@ app.config([ "$routeProvider", function($routeProvider) {
 		resolve : {
 			loggedin : checkLoggedin
 		}
+	}).when('/targets', {
+		templateUrl : 'target/targets',
+		controller : targetsController,
+		resolve : {
+			loggedin : checkLoggedin
+		}
 	}).when('/error', {
 		templateUrl : 'login/error',
 		controller : errorController

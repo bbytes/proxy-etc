@@ -7,9 +7,9 @@ var master = require('./proxy/master')
   , config = require('./config/config')
   , cluster = require('cluster');
 
-if (cluster.isMaster) {
+/*if (cluster.isMaster) {
 	// Run the master
-	master();
+	master();*/
 	
 	var express = require('express')
 		, http = require('http')
@@ -17,7 +17,9 @@ if (cluster.isMaster) {
 		, passport = require('passport')
 		, Db = require('tingodb')().Db
 	    , app = express()
-	    , db = new Db(config.dbPath, {});
+	    , db = new Db(config.dbPath, {})
+	    , WatchMen = require('./watchmen/watchmen')
+	    , targetsDao = require('./dao/targets');
 
 	var expressConfig = require('./config/express');
 	expressConfig(app, express, path, __dirname, passport, config);
@@ -31,15 +33,18 @@ if (cluster.isMaster) {
 	reqmap(app, db, passport, auth);
     
 	var httpServer = http.createServer(app);
+	
 	httpServer.listen(config.app.port, config.app.hostname, function(req,
 			res, next) {
 		console.log('Http server on port : ' + config.app.port);
+		var watchmen = new WatchMen(targetsDao);
+		watchmen.start();
 	});
-} else {
+/*} else {
 	// Run the worker
 	worker();
 }
-
+*/
 
 
 

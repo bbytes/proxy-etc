@@ -2,7 +2,7 @@
  * Request Mappings
  */
 
-var login = require('../controllers/login'), revproxy = require('../controllers/revproxy'), routes = require('../controllers/routes'), home=require('../controllers/home');
+var login = require('../controllers/login'), revproxy = require('../controllers/revproxy'), routes = require('../controllers/routes'), targets=require('../controllers/targets'), home=require('../controllers/home');
 
 module.exports = function(app, db, passport, auth) {
 	revproxy.init(db);
@@ -19,10 +19,15 @@ module.exports = function(app, db, passport, auth) {
 	});
 	
 	app.get('/home', auth, home.getHomePage);
-	app.get('/routes/allRoutes', auth, routes.getAllRoutes);
 	app.post('/routes/save', auth, routes.save);
 	app.post('/routes/update', auth, routes.update);
 	app.post('/routes/delete', auth, routes.deleteRoute);
+	app.get('/routes/allRoutes', auth, routes.getAllRoutes);
+	app.get('/target/targets', auth, home.getTargetsPage);
+	app.get('/target/allTargets', auth, targets.getAllTargets);
+	app.post('/target/updateConfig', auth, targets.updateTargetConfig);
+	app.post('/target/changeEnabled', auth, targets.changeEnabled);
+	
 	
 	app.get('/logout', function(req, res){
 		req.logout();

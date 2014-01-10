@@ -37,13 +37,24 @@
   }
   
   .modal-label {
+    float:left;
+    width:40%;
+    margin-top:5px;
+  }
+  
+  .modal-text{
+  	float:left;
+    width:50%
+  }
+  
+  .route-modal-label {
   	margin-left:8%;
     float:left;
     width:20%;
     margin-top:5px;
   }
   
-  .modal-text{
+  .route-modal-text{
   	float:left;
     width:70%
   }

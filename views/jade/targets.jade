@@ -1,0 +1,78 @@
+.container(style='margin: 50px 200px;')
+ div.content(style='min-height: 200px; width:800px; margin : 0px -60px; width:1050px;')
+   div.row(style=' margin-left: -60px;')
+     div.login-form
+      h2 Targets
+      table.table.table-bordered
+        thead
+          tr
+            th Host
+            th Port
+            th Source
+            th Status
+            th Running Since
+            th Outages
+            th Uptime
+            th Action
+            th Config
+        tbody
+          tr(ng-repeat='target in targets')
+            td {{target.host}}
+            td {{target.port}}
+            td {{target.source}}
+            td
+             img(src='images/button-red-2.png' ng-show='target.state.status == \'error\'')
+             img(src='images/button-green-1.png' ng-show='target.state.status == \'success\'')
+            td {{target.state.running_since | date:'medium'}}
+            td {{target.state.outages}}
+            td {{target.state.uptime}}%
+            td(ng-show='target.config.enabled')
+              button.btn.btn-danger(style='width: 70px;' ng-click='changeEnabled(target._id, \'false\')') Disable
+            td(ng-show='!target.config.enabled')
+              button.btn.btn-success(style='width: 70px;' ng-click='changeEnabled(target._id, \'true\')' ng-disabled='!target.config.ping_service') Enable
+            td
+              button.btn.btn-danger(style='width: 70px;' data-toggle='modal' data-target='#targetConfigModal' ng-click='openModal(target)') Config
+              
+#targetConfigModal.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
+    .modal-body
+        .modal-box
+          .modal-label Ping service name
+          .modal-text(style='margin-top : 5px;')
+            input(type='radio', value='http', name='http', ng-model='config.ping_service', style='margin-top:-1px;') 
+            |   http
+            input(type='radio', value='https', name='https', ng-model='config.ping_service', style='margin-top:-1px; margin-left: 50px;') 
+            |   https
+            input(type='radio', value='smtp', name='smtp', ng-model='config.ping_service', style='margin-top:-1px; margin-left: 50px;') 
+            |   smtp     
+        .modal-box
+          .modal-label Timeout
+          .modal-text
+            input(type='text', value='', name='timeout', placeholder='Milliseconds' ng-model='config.timeout' style='width : 300px;')
+        .modal-box
+          .modal-label Ping interval
+          .modal-text
+            input(type='text', value='', name='ping_interval', placeholder='Seconds' ng-model='config.ping_interval' style='width : 300px;')
+        .modal-box
+          .modal-label Alert to
+          .modal-text
+            input(type='text', value='', name='alert_to', placeholder='Email Id' ng-model='config.alert_to' style='width : 300px;')
+        .modal-box
+          .modal-label Warning if takes more than
+          .modal-text
+            input(type='text', value='', name='warning_if_takes_more_than', placeholder='Milliseconds' ng-model='config.warning_if_takes_more_than' style='width : 300px;')
+        .modal-box
+          .modal-label service
+          .modal-text
+            input(type='text', value='', name='method', placeholder='Method' ng-model='config.method' style='width : 300px;')
+          .modal-label
+          .modal-text
+            input(type='text', value='', name='url', placeholder='URL' ng-model='config.url' style='width : 300px;')
+          .modal-label
+          .modal-text
+            input(type='text', value='', name='expectedStatuscode', placeholder='Expected status code' ng-model='config.expectedStatuscode' style='width : 300px;')
+          .modal-label
+          .modal-text
+            input(type='text', value='', name='ExpectedData', placeholder='Expected Data' ng-model='config.expectedData' style='width : 300px;')
+      .modal-footer
+        button.btn(data-dismiss='modal', aria-hidden='true', ng-click='cancelSave()') Cancel
+        button.btn.btn-primary(data-dismiss='modal', ng-click='updateTargetConfig()') OK              

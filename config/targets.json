@@ -1,0 +1,11 @@
+{
+  "targets": [
+    {
+      "host": "aa",
+      "port": "aaa",
+      "source": "aaa",
+      "id": 2,
+      "enabled": false
+    }
+  ]
+}

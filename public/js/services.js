@@ -31,3 +31,15 @@ app.service('route', function(httpService) {
 		httpService.postRequest('routes/delete', data, 'application/x-www-form-urlencoded', callback);
 	};
 });
+
+app.service('target', function(httpService) {
+	this.getAllTargets = function(callback) {
+		httpService.getRequest('target/allTargets', callback);
+	};
+	this.updateTargetConfig = function(data, callback){
+		httpService.postRequest('target/updateConfig', data, 'application/json', callback);
+	};
+	this.changeEnabled = function(data, callback){
+		httpService.postRequest('target/changeEnabled', data, 'application/json', callback);
+	};
+});
