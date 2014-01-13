@@ -7,18 +7,6 @@ var targetsDao = require("../dao/targets");
 exports.init = function(db) {
 	targetsDao.init(db);
 };
-/*
-exports.save = function(req, res) {
-	
-};
-
-exports.deleteTarget = function(req, res){
-	
-};
-
-exports.update = function(req, res) {
-	
-};*/
 
 exports.updateTargetConfig = function(req, res){
 	var config = req.body.config;

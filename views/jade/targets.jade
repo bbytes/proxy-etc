@@ -31,7 +31,7 @@
             td(ng-show='!target.config.enabled')
               button.btn.btn-success(style='width: 70px;' ng-click='changeEnabled(target._id, \'true\')' ng-disabled='!target.config.ping_service') Enable
             td
-              button.btn.btn-danger(style='width: 70px;' data-toggle='modal' data-target='#targetConfigModal' ng-click='openModal(target)') Config
+              button.btn.btn-primary(style='width: 70px;' data-toggle='modal' data-target='#targetConfigModal' ng-click='openModal(target)') Config
               
 #targetConfigModal.modal.hide.fade(tabindex='-1', role='dialog', aria-labelledby='myModalLabel', aria-hidden='true')
     .modal-body
@@ -61,7 +61,7 @@
           .modal-text
             input(type='text', value='', name='warning_if_takes_more_than', placeholder='Milliseconds' ng-model='config.warning_if_takes_more_than' style='width : 300px;')
         .modal-box
-          .modal-label service
+          .modal-label service(optional)
           .modal-text
             input(type='text', value='', name='method', placeholder='Method' ng-model='config.method' style='width : 300px;')
           .modal-label

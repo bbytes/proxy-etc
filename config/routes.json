@@ -1,14 +1,1 @@
-{
-  "aaa": {
-    "source": "aaa",
-    "targets": [
-      {
-        "host": "aa",
-        "port": "aaa",
-        "id": 2
-      }
-    ],
-    "sessionType": "Sticky",
-    "_id": 2
-  }
-}
+{}

@@ -11,6 +11,7 @@ exports.init = function(db) {
 };
 
 var updateTargetsJson = function() {
+	targetsJson = {};
 	collection.find().toArray(function(error, result) {
 		var targets = [];
 		if (result && result != null) {
@@ -30,6 +31,7 @@ var updateTargetsJson = function() {
 };
 
 exports.updateJson = function(){
+	targetsJson = {};
 	collection.find().toArray(function(error, result) {
 		var targets = [];
 		if (result && result != null) {
