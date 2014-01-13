@@ -103,6 +103,7 @@ function proxyRequest(req, res, target) {
 function getRoute(req){
 	var url = decodeURI(req.url).toLowerCase(), route = null;
 	var prefix = url.split("/")[1];
+	var hostAndPort = req.headers.host;
 	var hostname = req.headers.host.split(':')[0];
 
 	if (routesJson != null) {
@@ -117,11 +118,14 @@ function getRoute(req){
 		if (route == null) {
 			route = routesJson["/" + prefix];
 		}
+		if (route == null) {
+			route = routesJson[hostAndPort];
+		}
 	}
 	return route;
 }
 
-function parseCookies (request) {
+function parseCookies(request) {
     var list = {},
         rc = request.headers.cookie;
 
