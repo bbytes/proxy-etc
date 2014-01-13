@@ -1,7 +1,6 @@
-var events = require('events'), fs = require('fs'), http = require('./ping/http');
+var events = require('events'), fs = require('fs'), http = require('./ping/http'), targetsDao = require('../dao/targets');
 
-function WatchMen(targetsDao){
-  this.targetsDao = targetsDao;
+function WatchMen(){
   this.daemon_status = 0; //0=stopped, 1=running
 }
 
@@ -14,7 +13,7 @@ WatchMen.prototype.ping = function (params, callback){
   var self = this;
   var timestamp = params.timestamp || +new Date(); //allow timestamp injection for easy testing
 
-  self.targetsDao.findById(params.target.id, function (err, target){
+  targetsDao.findById(params.target.id, function (err, target){
       if (err) {return callback (err);}
       
       if(target.config.ping_service){
@@ -101,7 +100,7 @@ WatchMen.prototype.ping = function (params, callback){
 		      }
 		
 		      target.state = state;
-		      self.targetsDao.updateState({_id : target._id}, target, function (err, result){
+		      targetsDao.updateState({_id : target._id}, target, function (err, result){
 		        callback (err, state);
 		      });
 		
@@ -143,7 +142,7 @@ WatchMen.prototype.start = function (){
 	 readTargetsJson();
  });
  
- self.targetsDao.updateJson();
+ targetsDao.updateJson();
 
  function launch (target){
    self.ping ({target:target}, function (err, state){

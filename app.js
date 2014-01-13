@@ -19,7 +19,7 @@ if (cluster.isMaster) {
 	    , app = express()
 	    , db = new Db(config.dbPath, {})
 	    , WatchMen = require('./watchmen/watchmen')
-	    , targetsDao = require('./dao/targets');
+	    , email = require('./watchmen/email');
 
 	var expressConfig = require('./config/express');
 	expressConfig(app, express, path, __dirname, passport, config);
@@ -37,8 +37,31 @@ if (cluster.isMaster) {
 	httpServer.listen(config.app.port, config.app.hostname, function(req,
 			res, next) {
 		console.log('Http server on port : ' + config.app.port);
-		var watchmen = new WatchMen(targetsDao);
+		var watchmen = new WatchMen();
 		watchmen.start();
+		
+		watchmen.on('service_error', function(target, state) {
+			  if (state.prev_state.status === 'success' && target.config.enabled && target.config.alert_to) {
+				var message =  "<div>" + target.host + ":" + target.port + " is down!." + "</div><br> <div>Reason: " + state.error + "</div>";
+				if(target.config.url){
+					message = message + "<br><div>URL : "+target.config.url+"</div>";
+				}
+				var params = {host : target.host, port : target.port, to : target.config.alert_to, message : message}; 
+			    email.sendEmail(params);
+			  }
+		});
+		
+		watchmen.on('service_back', function(target, state) {
+			  if (target.config.enabled && target.config.alert_to){
+				var message =  "<div>" + target.host + ":" + target.port + " is back!." + "</div>";
+				if(target.config.url){
+					message = message + "<br><div>URL : "+target.config.url+"</div>";
+				}
+				var params = {host : target.host, port : target.port, to : target.config.alert_to, message : message};
+			    email.sendEmail(params);
+			  }
+		});
+		
 	});
 } else {
 	// Run the worker

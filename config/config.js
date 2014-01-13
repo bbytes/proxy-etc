@@ -12,13 +12,13 @@ module.exports = {
 	app : {
 		name : 'proxy-etc',
 		hostname : '0.0.0.0',
-		port : 3333,
+		port : 3333
 	},
 	
 	//proxy
 	http : {
 		hostname : '0.0.0.0',
-		port : 80,
+		port : 80
 	},
 	// https : {
 	//	hostname : 'localhost',
@@ -34,5 +34,10 @@ module.exports = {
 	credentials : {
 		username : "admin",
 		password : "admin"
+	},
+	mail : {
+		apiKey : 'key-3lfx4-72cylett1ksl8t26ijch1hk8o4',
+		from : 'rberts321@gmail.com',
+		subject : 'Proxy-etc'
 	}
 };

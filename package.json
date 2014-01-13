@@ -16,6 +16,7 @@
     "strong-store-cluster" : "latest",
     "jsonfile" : "latest",
     "request" : "latest",
-    "async" : "latest"
+    "async" : "latest",
+    "mailgun" : "latest"
    }
 }
