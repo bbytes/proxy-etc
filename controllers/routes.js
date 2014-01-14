@@ -5,11 +5,26 @@
 var routesDao = require("../dao/routes");
 var targetsDao = require("../dao/targets");
 var async = require('async'); 
+var runningServers = [];
+var http = require('http');
+var config = require('../config/config');
+var httpProxy = require("http-proxy");
+var proxy = new httpProxy.RoutingProxy();
 
 exports.init = function(db) {
 	routesDao.init(db);
 	targetsDao.init(db);
+	startServers();
 };
+
+function startServers(){
+	routesDao.getAll(function(error, result){
+		for(var i=0; i<result.length; i++){
+			var options = {newSource : result[i].source};
+			startServer(options);
+		}
+	});
+}
 
 exports.save = function(req, res) {
 	var route = req.body.route;
@@ -43,6 +58,8 @@ exports.save = function(req, res) {
 						if(error){
 							res.send("Error");
 						} else {
+							var options = {newSource : jsonData.source};
+							startServer(options);
 							res.send({route : data[0]});
 						}
 					});
@@ -61,6 +78,8 @@ exports.deleteRoute = function(req, res){
 				if(error){
 					res.send("Error");
 				} else {
+					var options = {oldSource : result.source};
+					startServer(options);
 					var targets = result.targets;
 					async.eachSeries(targets, function(target, done){
 						targetsDao.deleteById(target.id, function(error, data){
@@ -87,12 +106,14 @@ exports.update = function(req, res) {
 	var route = req.body.route;
 	var targetsToRemove = [];
 	var routesTargets = [];
+	var oldRoute1 = {};
 	var config = {enabled : false, ping_service : "", timeout : "", ping_interval : "",
 			alert_to : "", warning_if_takes_more_than : "", method : "",
 				url : "", expectedStatuscode : "", expectedData : ""};
 	routesDao.getBySource(route.source, function(error, data){
 		if(data == null || data._id == route._id){
 			routesDao.findById(route._id, function(error, oldRoute){
+				oldRoute1 = oldRoute;
 				var targetsMap = {};
 				var updatedTargets = route.targets;
 				for(var i=0; i< updatedTargets.length; i++){
@@ -167,16 +188,15 @@ exports.update = function(req, res) {
 									if(err){
 										res.send(err);
 									} else {
+										var options = {oldSource : oldRoute1.source, newSource : route.source};
+										startServer(options);
 										res.send({id : result});
 									}
 								});
 							}
 						});
 					}
-				});
-				
-				
-				
+				});	
 			});
 
 		} else {
@@ -194,3 +214,25 @@ exports.getAllRoutes = function(req, res) {
 		}
 	});
 };
+
+function startServer(options){
+	if(options.oldSource){
+		var oldServer = runningServers[options.oldSource];
+		if(oldServer){
+			oldServer.close();
+		}
+	}
+	
+	if(options.newSource){
+		if(/^\d+$/.test(options.newSource)){
+			var server = http.createServer(portForward);
+			server.listen(options.newSource, config.app.hostname);
+			runningServers[options.newSource] = server;
+		}
+	}
+}
+
+function portForward(req, res){
+	var host = {host : config.http.hostname, port : config.http.port};
+	proxy.proxyRequest(req, res, host);
+}

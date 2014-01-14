@@ -103,8 +103,9 @@ function proxyRequest(req, res, target) {
 function getRoute(req){
 	var url = decodeURI(req.url).toLowerCase(), route = null;
 	var prefix = url.split("/")[1];
-	var hostAndPort = req.headers.host;
+	//var hostAndPort = req.headers.host;
 	var hostname = req.headers.host.split(':')[0];
+	var port = req.headers.host.split(':')[1];
 
 	if (routesJson != null) {
 		route = routesJson[hostname];
@@ -119,7 +120,7 @@ function getRoute(req){
 			route = routesJson["/" + prefix];
 		}
 		if (route == null) {
-			route = routesJson[hostAndPort];
+			route = routesJson[port];
 		}
 	}
 	return route;
