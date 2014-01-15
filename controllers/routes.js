@@ -28,47 +28,30 @@ function startServers(){
 
 exports.save = function(req, res) {
 	var route = req.body.route;
-	var jsonData = {
-		source : route.source,
-		targets : [],
-		sessionType : route.sessionType
-	};
+	if(route.source && /^\d+$/.test(route.source)){
+		testPort(config.app.hostname, route.source, function(result, data){
+			if(result == "success"){
+				saveRoute(req, res, route);
+			} else if(result == "failure"){
+				res.send({error : "This port is already in use or not existed"});
+			}
+		});
+	}
 
-	routesDao.getBySource(route.source, function(error, data){
-		if(data == null){
-			var targets = route.targets;
-			var config = {enabled : false, ping_service : "", timeout : "", ping_interval : "",
-					alert_to : "", warning_if_takes_more_than : "", method : "",
-						url : "", expectedStatuscode : "", expectedData : ""};
-			async.eachSeries(targets, function(target, done){
-				var targetToSave = {host : target.host, port : target.port, source : route.source, config : config, state : {}};
-				targetsDao.save(targetToSave, function(error, data){
-					if(error){
-						done("Error", null);
-					} else {
-						jsonData.targets.push({host : data[0].host, port : data[0].port, id : data[0]._id});
-						done(null, data[0]);
-					}
-				});
-			}, function(err, data){
-				if(err){
-					res.send("Error");
-				} else {
-					routesDao.save(jsonData, function(error, data) {
-						if(error){
-							res.send("Error");
-						} else {
-							var options = {newSource : jsonData.source};
-							startServer(options);
-							res.send({route : data[0]});
-						}
-					});
-				}
-			});
-		} else {
-			res.send("Route with source : "+ route.source +" already exists");
-		}
-	});
+};
+
+exports.update = function(req, res) {
+	var route = req.body.route;
+	if(route.source && /^\d+$/.test(route.source)){
+		testPort(config.app.hostname, route.source, function(result, data){
+			if(result == "success"){
+				updateRoute(req, res, route);
+			} else if(result == "failure"){
+				res.send({error : "This port is already in use or not existed"});
+			}
+		});
+	}
+
 };
 
 exports.deleteRoute = function(req, res){
@@ -102,8 +85,62 @@ exports.deleteRoute = function(req, res){
 	});
 };
 
-exports.update = function(req, res) {
-	var route = req.body.route;
+exports.getAllRoutes = function(req, res) {
+	routesDao.getAll(function(error, data) {
+		if(error){
+			res.send("");
+		} else {
+			res.send(data);
+		}
+	});
+};
+
+
+function saveRoute(req, res, route){
+	var jsonData = {
+			source : route.source,
+			targets : [],
+			sessionType : route.sessionType
+		};
+
+		routesDao.getBySource(route.source, function(error, data){
+			if(data == null){
+				var targets = route.targets;
+				var config = {enabled : false, ping_service : "", timeout : "", ping_interval : "",
+						alert_to : "", warning_if_takes_more_than : "", method : "",
+							url : "", expectedStatuscode : "", expectedData : ""};
+				async.eachSeries(targets, function(target, done){
+					var targetToSave = {host : target.host, port : target.port, source : route.source, config : config, state : {}};
+					targetsDao.save(targetToSave, function(error, data){
+						if(error){
+							done("Error", null);
+						} else {
+							jsonData.targets.push({host : data[0].host, port : data[0].port, id : data[0]._id});
+							done(null, data[0]);
+						}
+					});
+				}, function(err, data){
+					if(err){
+						res.send("Error");
+					} else {
+						routesDao.save(jsonData, function(error, data) {
+							if(error){
+								res.send("Error");
+							} else {
+								var options = {newSource : jsonData.source};
+								startServer(options);
+								res.send({route : data[0]});
+							}
+						});
+					}
+				});
+			} else {
+				res.send("Route with source : "+ route.source +" already exists");
+			}
+		});
+}
+
+function updateRoute(req, res, route){
 	var targetsToRemove = [];
 	var routesTargets = [];
 	var oldRoute1 = {};
@@ -203,17 +240,7 @@ exports.update = function(req, res) {
 			res.send("Route with source : "+ route.source +" already exists");
 		}
 	});
-};
-
-exports.getAllRoutes = function(req, res) {
-	routesDao.getAll(function(error, data) {
-		if(error){
-			res.send("");
-		} else {
-			res.send(data);
-		}
-	});
-};
+}
 
 function startServer(options){
 	if(options.oldSource){
@@ -235,4 +262,16 @@ function startServer(options){
 function portForward(req, res){
 	var host = {host : config.http.hostname, port : config.http.port};
 	proxy.proxyRequest(req, res, host);
+}
+
+
+function testPort(port, host, callback) {
+	  http.get({
+		  host: host, 
+		  port: port 
+	  }, function(res) {
+		  callback("success", res); 
+	  }).on("error", function(e) {
+		  callback("failure", e);
+	  });
 }

@@ -16,7 +16,7 @@ function loginController($scope, $location, login) {
 	};
 }
 
-function homeController($scope, $location, route) {
+function homeController($scope, $location, route, $rootScope) {
 	$scope.routes = null;
 	$scope.selectedRoute = null;
 	$scope.action = "";
@@ -51,11 +51,17 @@ function homeController($scope, $location, route) {
 		if ($scope.action == "add") {
 			$scope.action = "";
 			route.save(data, function(data) {
+				if(data.error){
+					$rootScope.message = data.error;
+				}
 				$scope.getAllRoutes();
 			});
 		} else if ($scope.action == "edit") {
 			$scope.action = "";
 			route.update(data, function(data) {
+				if(data.error){
+					$rootScope.message = data.error;
+				}
 				$scope.getAllRoutes();
 			});
 		}
