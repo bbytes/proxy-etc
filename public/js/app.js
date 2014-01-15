@@ -32,7 +32,7 @@ app.config([ "$routeProvider", function($routeProvider) {
  */
 app.run(function($rootScope, $location, $http, login) {
 	$rootScope.isLoggedIn = false;
-	$rootScope.message = null;
+	$rootScope.message = "";
 });
 
 app.config([ "$httpProvider", function($httpProvider) {

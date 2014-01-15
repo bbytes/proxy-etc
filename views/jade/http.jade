@@ -1,5 +1,6 @@
-.alert.alert-warning.alert-dismissable(ng-show='message') {{message}}
-  button.close(type='button', data-dismiss='alert', aria-hidden='true') × 
+.alert-box(ng-show='message != ""')
+ .alert.alert-warning.alert-dismissable {{message}}
+   button.close(type='button', data-dismiss='alert') &times;
 button.btn.btn-success.pull-right(data-toggle='modal' data-target='#routeModal', style='width: 70px;' ng-click='openModal(null, \'add\')') Add
 h2 Routes
 table.table.table-bordered
