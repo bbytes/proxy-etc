@@ -30,9 +30,9 @@ exports.save = function(req, res) {
 	var route = req.body.route;
 	if(route.source && /^\d+$/.test(route.source)){
 		testPort(config.app.hostname, route.source, function(result, data){
-			if(result == "success"){
+			if(result == "failure"){
 				saveRoute(req, res, route);
-			} else if(result == "failure"){
+			} else if(result == "success"){
 				res.send({error : "This port is already in use or not existed"});
 			}
 		});
@@ -44,9 +44,9 @@ exports.update = function(req, res) {
 	var route = req.body.route;
 	if(route.source && /^\d+$/.test(route.source)){
 		testPort(config.app.hostname, route.source, function(result, data){
-			if(result == "success"){
+			if(result == "failure"){
 				updateRoute(req, res, route);
-			} else if(result == "failure"){
+			} else if(result == "success"){
 				res.send({error : "This port is already in use or not existed"});
 			}
 		});
@@ -265,7 +265,7 @@ function portForward(req, res){
 }
 
 
-function testPort(port, host, callback) {
+function testPort(host, port, callback) {
 	  http.get({
 		  host: host, 
 		  port: port 
