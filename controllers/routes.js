@@ -51,6 +51,8 @@ exports.update = function(req, res) {
 				res.send({error : "This port is already in use or not existed"});
 			}
 		});
+	} else {
+		updateRoute(req, res, route);
 	}
 
 };
@@ -195,7 +197,7 @@ function updateRoute(req, res, route){
 										done("Error");
 									} else {
 										var status = "";
-										if(data[0].state.status){
+										if(data.state.status){
 											status = data.state.status;
 										}
 										routesTargets.push({host : data.host, port : data.port, id : data._id, status : status});
