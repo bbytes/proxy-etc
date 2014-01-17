@@ -139,25 +139,6 @@ function targetsController($scope, $rootScope, target, $timeout){
 	};
 }
 
-function alertController($scope, $rootScope, $timeout) {
-	$rootScope.closeAlert = function(index) {
-		$rootScope.alerts.splice(index, 1);
-	};
-
-	$rootScope.addAlert = function(type, message, auto) {
-		$rootScope.alerts.push({
-			type : type,
-			message : message,
-			auto : auto
-		});
-		if (auto == true) {
-			$timeout(function() {
-				$rootScope.alerts = [];
-			}, 3000);
-		}
-	};
-}
-
 function errorController($scope, $http, $location, $rootScope) {
 	$scope.status = $rootScope.status;
 	$rootScope.status = "";

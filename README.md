@@ -137,7 +137,7 @@ Each worker monitors its memory usage. If it crosses a given threshold, the work
 ### Watchmen integration
 Status of added target can monitored by adding target configuration. For example whether target is running or not, Number of outages(Number of times the target is down), Uptime.
 
-<img src="screen-shots/targets.png" />
+ <img src="screen-shots/targets.png" />
 
 ###Port forwarding
 Port forwarding in machine in which proxy is running can be achieved by giving port name instead of host name while adding route.
