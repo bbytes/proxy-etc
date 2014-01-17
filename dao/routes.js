@@ -91,9 +91,9 @@ exports.updateTargetStatus = function(target, callback){
 	collection.findOne({
 		source : target.source
 	}, function(error, result) {
-		var targets = result.targets;
-		for(var i=0; i<targets.length; i++){
-			if (!error) {
+		if (!error && result) {
+			var targets = result.targets;
+			for(var i=0; i<targets.length; i++){
 				if(targets[i].id = target._id){
 					var newTarget = targets[i];
 					newTarget.status = target.state.status;
@@ -107,6 +107,8 @@ exports.updateTargetStatus = function(target, callback){
 					});
 				}
 			}
+		} else {
+			callback(error, result);
 		}
 	});
 };
