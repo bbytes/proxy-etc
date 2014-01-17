@@ -40,6 +40,4 @@ module.exports = function(app, db, passport, auth) {
 	app.get('/isAuthenticated', function(req, res){
 		res.send(req.isAuthenticated() ? req.user : '0');
 	});
-	
-	/*app.all('*', revproxy.forward);*/
 };
