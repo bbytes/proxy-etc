@@ -70,19 +70,46 @@ Dynamic reverse proxy based on node js.
 			username : "admin",
 			password : "admin"
 		}
+		mail : {
+			apiKey : 'key-3lfx4-726ijch1hk8o4',
+			from : 'xyz@gmail.com',
+			subject : 'Proxy-etc'
+		}
               
  * __dbPath__ : Path to tingoDB folder
  * __maxSockets__ : The maximum number of sockets which can be opened on
 each backend (per worker)
  * __workers__ : Number of workers to be spawned (specify at least 1, the
 master process does not serve any request)
- * __https__ : SSL configuration (omit this section to disable HTTPS) 
+ * __https__ : SSL configuration (omit this section to disable HTTPS)
  
 
 ## Features implemented 
 
 ### Configure via REST 
   Routes can be added or removed or updated using rest.
+
+* __Adding route__ 
+  * __method__ : POST, 
+  * __url__ : /routes/save, 
+  * __example route json__ : {"route" : {"source" : "www.errzero.com", "targets" : [{"host" : "localhost", "port" : "8080"}], "sessionType" : "Sticky"} }
+* __Update route__ 
+  * __method__ : POST
+  * __url__ : /routes/update
+  * __data__ : routes json to be updated
+* __Delete Route__
+  * __method__ : POST
+  * __url__ : /routes/delete
+  * __data__ : {"id" : "7"}
+* __Get all routes__
+  * __method__ : GET,
+  * __url__ : /routes/allRoutes
+* __Update config of target__
+  * __method__ : POST
+  * __url__ : /target/updateConfig
+  * __data__ : {"id" : "7", config : {"enabled":true, "ping service":"http", "timeout":"100", "ping interval":"3",
+"alertto":"sunanda@beyondbytes.co.in", "warning if takes more than":"100",
+"method":"", "url":"", "expectedStatuscode":"", "expectedData":""}}
 
 ### HTTP/HTTPS reverse proxy
   Supports both HTTP and HTTPS
@@ -107,10 +134,16 @@ To optimize response times and make use of all your available cores, Proxy-etc u
 ### Memory monitoring
 Each worker monitors its memory usage. If it crosses a given threshold, the worker stops accepting new connections, it lets the current requests complete cleanly, and it stops itself; it is then replaced by a new copy by the master process.
 
+### Watchmen integration
+Status of added target can monitored by adding target configuration. For example whether target is running or not, Number of outages(Number of times the target is down), Uptime.
+
+<img src="screen-shots/targets.png" />
+
+###Port forwarding
+Port forwarding in machine in which proxy is running can be achieved by giving port name instead of host name while adding route.
+
 
 ### TO-DO
-* __Auto detection of server node failure and send alert as email__
 * __OS integration__
 * __TCP proxy [for mysql]__
-* __Avoid dog pile effect__
-* __etcd to dynamically switch application__    
+* __Avoid dog pile effect__  
