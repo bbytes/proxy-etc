@@ -2,10 +2,9 @@
  * Request Mappings
  */
 
-var login = require('../controllers/login'), revproxy = require('../controllers/revproxy'), routes = require('../controllers/routes'), targets=require('../controllers/targets'), home=require('../controllers/home');
+var login = require('../controllers/login'), routes = require('../controllers/routes'), targets=require('../controllers/targets'), home=require('../controllers/home');
 
 module.exports = function(app, db, passport, auth) {
-	revproxy.init(db);
 	routes.init(db);
 
 	app.get('/login', login.login);
