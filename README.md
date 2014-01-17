@@ -108,7 +108,7 @@ master process does not serve any request)
   * __method__ : POST
   * __url__ : /target/updateConfig
   * __data__ : {"id" : "7", config : {"enabled":true, "ping service":"http", "timeout":"100", "ping interval":"3",
-"alertto":"sunanda@beyondbytes.co.in", "warning if takes more than":"100",
+"alertto":"abc@gmail.com", "warning if takes more than":"100",
 "method":"", "url":"", "expectedStatuscode":"", "expectedData":""}}
 
 ### HTTP/HTTPS reverse proxy
