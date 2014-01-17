@@ -39,6 +39,12 @@ exports.forwardRequest = function(req, res) {
 		console.log("No routes found");
 	} else {
 		var target = null;
+		for(var i=0; i<route.targets.length; i++){
+			if(route.targets[i].status == 'error'){
+				route.targets.splice(i, 1);
+			}
+		}
+
 		if (route.targets.length > 1) {
 			var cookie = req.headers.cookie;
 			if (route.sessionType == "Non Sticky" || cookie == undefined) {
@@ -80,7 +86,7 @@ exports.forwardRequest = function(req, res) {
 				};
 				proxyRequest(req, res, target);
 			}
-		} else {
+		} else if(route.targets.length == 1) {
 			var target = route.targets[0];
 			proxyRequest(req, res, target);
 		}

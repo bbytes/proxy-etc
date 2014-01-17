@@ -36,8 +36,9 @@ exports.save = function(req, res) {
 				res.send({error : "This port is already in use or not existed"});
 			}
 		});
+	} else {
+		saveRoute(req, res, route);
 	}
-
 };
 
 exports.update = function(req, res) {
@@ -115,7 +116,11 @@ function saveRoute(req, res, route){
 						if(error){
 							done("Error", null);
 						} else {
-							jsonData.targets.push({host : data[0].host, port : data[0].port, id : data[0]._id});
+							var status = "";
+							if(data[0].state.status){
+								status = data[0].state.status;
+							}
+							jsonData.targets.push({host : data[0].host, port : data[0].port, id : data[0]._id, status : status});
 							done(null, data[0]);
 						}
 					});
@@ -173,7 +178,11 @@ function updateRoute(req, res, route){
 									if(error){
 										done("Error");
 									} else {
-										routesTargets.push({host : data[0].host, port : data[0].port, id : data[0]._id});
+										var status = "";
+										if(data[0].state.status){
+											status = data[0].state.status;
+										}
+										routesTargets.push({host : data[0].host, port : data[0].port, id : data[0]._id, status : status});
 										done(null);
 									}
 								});
@@ -185,7 +194,11 @@ function updateRoute(req, res, route){
 									if(error){
 										done("Error");
 									} else {
-										routesTargets.push({host : data.host, port : data.port, id : data._id});
+										var status = "";
+										if(data[0].state.status){
+											status = data.state.status;
+										}
+										routesTargets.push({host : data.host, port : data.port, id : data._id, status : status});
 										done(null);
 									}
 								});
@@ -197,7 +210,11 @@ function updateRoute(req, res, route){
 							if(error){
 								done("Error");
 							} else {
-								routesTargets.push({host : data[0].host, port : data[0].port, id : data[0]._id});
+								var status = "";
+								if(data[0].state.status){
+									status = data[0].state.status;
+								}
+								routesTargets.push({host : data[0].host, port : data[0].port, id : data[0]._id, status : status});
 								done(null);
 							}
 						});

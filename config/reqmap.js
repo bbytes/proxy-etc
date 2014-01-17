@@ -9,6 +9,9 @@ module.exports = function(app, db, passport, auth) {
 	routes.init(db);
 
 	app.get('/login', login.login);
+	app.get('/', function(req, res){
+		res.redirect('/proxy');
+	});
 	app.get('/proxy', login.index);
 
 	app.post('/authenticate', auth, passport.authenticate('local', {
@@ -38,5 +41,5 @@ module.exports = function(app, db, passport, auth) {
 		res.send(req.isAuthenticated() ? req.user : '0');
 	});
 	
-	app.all('*', revproxy.forward);
+	/*app.all('*', revproxy.forward);*/
 };

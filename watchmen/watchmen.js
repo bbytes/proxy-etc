@@ -1,4 +1,4 @@
-var events = require('events'), fs = require('fs'), http = require('./ping/http'), targetsDao = require('../dao/targets');
+var events = require('events'), fs = require('fs'), http = require('./ping/http'), targetsDao = require('../dao/targets'), routesDao = require('../dao/routes');
 
 function WatchMen(){
   this.daemon_status = 0; //0=stopped, 1=running
@@ -101,9 +101,14 @@ WatchMen.prototype.ping = function (params, callback){
 		
 		      target.state = state;
 		      targetsDao.updateState({_id : target._id}, target, function (err, result){
-		        callback (err, state);
+		    	  if (prev_state.status !== state.status) {
+			    	  routesDao.updateTargetStatus(target, function(error, result){
+			    		  callback (err, state);
+			    	  });
+		    	  } else {
+		    		  callback (err, state);
+		    	  }
 		      });
-		
 		    });
 	      }
       }

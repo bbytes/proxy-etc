@@ -87,3 +87,26 @@ exports.deleteById = function(id, callback) {
 		callback(error, result);
 	});
 };
+exports.updateTargetStatus = function(target, callback){
+	collection.findOne({
+		source : target.source
+	}, function(error, result) {
+		var targets = result.targets;
+		for(var i=0; i<targets.length; i++){
+			if (!error) {
+				if(targets[i].id = target._id){
+					var newTarget = targets[i];
+					newTarget.status = target.state.status;
+					targets[i] = newTarget;
+					result.targets = targets;
+					collection.update({_id : result._id}, result, function(error, result) {
+						if (!error) {
+							updateRoutesJson();
+						}
+						callback(error, result);
+					});
+				}
+			}
+		}
+	});
+};
