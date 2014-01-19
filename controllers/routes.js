@@ -33,7 +33,7 @@ exports.save = function(req, res) {
 			if(result == "failure"){
 				saveRoute(req, res, route);
 			} else if(result == "success"){
-				res.send({error : "This port is already in use or not existed"});
+				res.send({error : "Port "+route.source+" is already in use or not existed"});
 			}
 		});
 	} else {
@@ -43,18 +43,25 @@ exports.save = function(req, res) {
 
 exports.update = function(req, res) {
 	var route = req.body.route;
-	if(route.source && /^\d+$/.test(route.source)){
-		testPort(config.app.hostname, route.source, function(result, data){
-			if(result == "failure"){
-				updateRoute(req, res, route);
-			} else if(result == "success"){
-				res.send({error : "This port is already in use or not existed"});
-			}
-		});
-	} else {
-		updateRoute(req, res, route);
-	}
-
+	routesDao.getBySource(route.source, function(error, data){
+		if(data == null || data._id == route._id){
+			routesDao.findById(route._id, function(error, oldRoute){
+				if(route.source && oldRoute.source != route.source && /^\d+$/.test(route.source)){
+					testPort(config.app.hostname, route.source, function(result, data){
+						if(result == "failure"){
+							updateRoute(req, res, route, oldRoute);
+						} else if(result == "success"){
+							res.send({error : "Port "+route.source+" is already in use or not existed"});
+						}
+					});
+				} else {
+					updateRoute(req, res, route, oldRoute);
+				}
+			});
+		} else {
+			res.send({error : "Route with source : "+ route.source +" already exists"});
+		}
+	});
 };
 
 exports.deleteRoute = function(req, res){
@@ -142,123 +149,114 @@ function saveRoute(req, res, route){
 					}
 				});
 			} else {
-				res.send("Route with source : "+ route.source +" already exists");
+				res.send({error : "Route with source : "+ route.source +" already exists"});
 			}
 		});
 }
 
-function updateRoute(req, res, route){
+function updateRoute(req, res, route, oldRoute){
+	var oldRoute1 = oldRoute;
 	var targetsToRemove = [];
 	var routesTargets = [];
-	var oldRoute1 = {};
+	
 	var config = {enabled : false, ping_service : "", timeout : "", ping_interval : "",
 			alert_to : "", warning_if_takes_more_than : "", method : "",
 				url : "", expectedStatuscode : "", expectedData : ""};
-	routesDao.getBySource(route.source, function(error, data){
-		if(data == null || data._id == route._id){
-			routesDao.findById(route._id, function(error, oldRoute){
-				oldRoute1 = oldRoute;
-				var targetsMap = {};
-				var updatedTargets = route.targets;
-				for(var i=0; i< updatedTargets.length; i++){
-					targetsMap[updatedTargets[i].id] = updatedTargets[i];
-				}
-				var oldTargets = oldRoute.targets;
-				for(var j=0; j<oldTargets.length; j++){
-					if(!targetsMap[oldTargets[j].id]){
-						targetsToRemove.push(oldTargets[j]);
-					}
-				}
+	var targetsMap = {};
+	var updatedTargets = route.targets;
+	for(var i=0; i< updatedTargets.length; i++){
+		targetsMap[updatedTargets[i].id] = updatedTargets[i];
+	}
+	var oldTargets = oldRoute.targets;
+	for(var j=0; j<oldTargets.length; j++){
+		if(!targetsMap[oldTargets[j].id]){
+			targetsToRemove.push(oldTargets[j]);
+		}
+	}
 
-				var targets = route.targets;
-				async.eachSeries(targets, function(target, done){
-					if(target.id){
-						targetsDao.findById(target.id, function(error, data){
-							if(data == null){
-								var targetToSave = {host : target.host, port : target.port, source : route.source, config : config, state : {}};
-								targetsDao.save(targetToSave, function(error, data){
-									if(error){
-										done("Error");
-									} else {
-										var status = "";
-										if(data[0].state.status){
-											status = data[0].state.status;
-										}
-										routesTargets.push({host : data[0].host, port : data[0].port, id : data[0]._id, status : status});
-										done(null);
-									}
-								});
-							} else {
-								data.host = target.host;
-								data.port = target.port;
-								data.source = route.source;
-								targetsDao.update({_id : data._id}, data, function(error, result){
-									if(error){
-										done("Error");
-									} else {
-										var status = "";
-										if(data.state.status){
-											status = data.state.status;
-										}
-										routesTargets.push({host : data.host, port : data.port, id : data._id, status : status});
-										done(null);
-									}
-								});
+	var targets = route.targets;
+	async.eachSeries(targets, function(target, done){
+		if(target.id){
+			targetsDao.findById(target.id, function(error, data){
+				if(data == null){
+					var targetToSave = {host : target.host, port : target.port, source : route.source, config : config, state : {}};
+					targetsDao.save(targetToSave, function(error, data){
+						if(error){
+							done("Error");
+						} else {
+							var status = "";
+							if(data[0].state.status){
+								status = data[0].state.status;
 							}
-						});
-					} else {
-						var targetToSave = {host : target.host, port : target.port, source:route.source, config : config, state : {}};
-						targetsDao.save(targetToSave, function(error, data){
+							routesTargets.push({host : data[0].host, port : data[0].port, id : data[0]._id, status : status});
+							done(null);
+						}
+					});
+				} else {
+					data.host = target.host;
+					data.port = target.port;
+					data.source = route.source;
+					targetsDao.update({_id : data._id}, data, function(error, result){
+						if(error){
+							done("Error");
+						} else {
+							var status = "";
+							if(data.state.status){
+								status = data.state.status;
+							}
+							routesTargets.push({host : data.host, port : data.port, id : data._id, status : status});
+							done(null);
+						}
+					});
+				}
+			});
+		} else {
+			var targetToSave = {host : target.host, port : target.port, source:route.source, config : config, state : {}};
+			targetsDao.save(targetToSave, function(error, data){
+				if(error){
+					done("Error");
+				} else {
+					var status = "";
+					if(data[0].state.status){
+						status = data[0].state.status;
+					}
+					routesTargets.push({host : data[0].host, port : data[0].port, id : data[0]._id, status : status});
+					done(null);
+				}
+			});
+		}
+	}, function(err){
+		if(err){
+			res.send(err);
+		} else {
+			route.targets = routesTargets;
+			routesDao.update({
+				_id : route._id
+			}, route, function(error, result) {
+				if(error){
+					res.send("Error");
+				} else {
+					async.eachSeries(targetsToRemove, function(targetToRemove, done){
+						targetsDao.deleteById(targetToRemove.id, function(error, data){
 							if(error){
 								done("Error");
 							} else {
-								var status = "";
-								if(data[0].state.status){
-									status = data[0].state.status;
-								}
-								routesTargets.push({host : data[0].host, port : data[0].port, id : data[0]._id, status : status});
 								done(null);
 							}
 						});
-					}
-				}, function(err){
-					if(err){
-						res.send(err);
-					} else {
-						route.targets = routesTargets;
-						routesDao.update({
-							_id : route._id
-						}, route, function(error, result) {
-							if(error){
-								res.send("Error");
-							} else {
-								async.eachSeries(targetsToRemove, function(targetToRemove, done){
-									targetsDao.deleteById(targetToRemove.id, function(error, data){
-										if(error){
-											done("Error");
-										} else {
-											done(null);
-										}
-									});
-								}, function(err){
-									if(err){
-										res.send(err);
-									} else {
-										var options = {oldSource : oldRoute1.source, newSource : route.source};
-										startServer(options);
-										res.send({id : result});
-									}
-								});
-							}
-						});
-					}
-				});	
+					}, function(err){
+						if(err){
+							res.send(err);
+						} else {
+							var options = {oldSource : oldRoute1.source, newSource : route.source};
+							startServer(options);
+							res.send({id : result});
+						}
+					});
+				}
 			});
-
-		} else {
-			res.send("Route with source : "+ route.source +" already exists");
 		}
-	});
+	});	
 }
 
 function startServer(options){
