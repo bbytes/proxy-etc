@@ -30,7 +30,7 @@ app.config([ "$routeProvider", function($routeProvider) {
 /**
  * It will execute when app is initialized
  */
-app.run(function($rootScope, $location, $http, login) {
+app.run(function($rootScope) {
 	$rootScope.isLoggedIn = false;
 	$rootScope.message = "";
 	
