@@ -16,7 +16,7 @@ WatchMen.prototype.ping = function (params, callback){
   targetsDao.findById(params.target.id, function (err, target){
       if (err) {return callback (err);}
       
-      if(target.config.ping_service){
+      if(target && target.config.ping_service){
 	      if(target.config.ping_service == 'http' || target.config.ping_service == 'https'){
 		      http.ping (target, function(error, body, response, elapsed_time){
 		      var targetConfig = target.config;
@@ -153,7 +153,7 @@ WatchMen.prototype.start = function (){
    self.ping ({target:target}, function (err, state){
     if (err){ console.error (err); }
 
-    if (self.daemon_status && target.count == count){
+    if (state && self.daemon_status && target.count == count){
      var timeoutID = setTimeout(launch, parseInt(state.next_attempt_secs, 10) * 1000, target);
      timeoutIDs[target.index] = timeoutID;
     }

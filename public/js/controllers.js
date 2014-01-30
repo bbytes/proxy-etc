@@ -102,7 +102,6 @@ function targetsController($scope, $rootScope, target, $timeout){
 	var getAllTargets = function(){
 		target.getAllTargets(function(data) {
 			$scope.targets = data;
-			refresh();
 		});
 	};
 	
@@ -110,9 +109,12 @@ function targetsController($scope, $rootScope, target, $timeout){
 	
 	var refresh = function(){
 	    $timeout(function(){
-	    	getAllTargets();
-	    },10000);
+			target.getAllTargets(function(data) {
+				$scope.targets = data;
+			});
+	    }, 10000);
 	};
+	refresh();
 
 	$scope.openModal = function(target){
 		$scope.selectedTarget = target;
