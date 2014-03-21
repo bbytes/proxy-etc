@@ -91,22 +91,22 @@ master process does not serve any request)
 
 * __Adding route__ 
   * __method__ : POST, 
-  * __url__ : /routes/save, 
+  * __url__ : /api/routes/save, 
   * __example route json__ : {"route" : {"source" : "www.errzero.com", "targets" : [{"host" : "localhost", "port" : "8080"}], "sessionType" : "Sticky"} }
 * __Update route__ 
   * __method__ : POST
-  * __url__ : /routes/update
+  * __url__ : /api/routes/update
   * __data__ : routes json to be updated
 * __Delete Route__
   * __method__ : POST
-  * __url__ : /routes/delete
+  * __url__ : /api/routes/delete
   * __data__ : {"id" : "7"}
 * __Get all routes__
   * __method__ : GET,
-  * __url__ : /routes/allRoutes
+  * __url__ : /api/routes/allRoutes
 * __Update config of target__
   * __method__ : POST
-  * __url__ : /target/updateConfig
+  * __url__ : /api/target/updateConfig
   * __data__ : {"id" : "7", config : {"enabled":true, "ping service":"http", "timeout":"100", "ping interval":"3",
 "alert to":"abc@gmail.com", "warning if takes more than":"100",
 "method":"", "url":"", "expectedStatuscode":"", "expectedData":""}}
