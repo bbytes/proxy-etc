@@ -64,11 +64,124 @@ exports.update = function(req, res) {
 	});
 };
 
+exports.updateTarget = function(req, res){
+	var source = req.body.source;
+	var oldTarget = req.body.oldTarget;
+	var newTarget = req.body.newTarget;
+	
+	if(oldTarget != null && newTarget != null && oldTarget.indexOf(":") > -1 && newTarget.indexOf(":") > -1){
+		var oldTargetHostAndPort = oldTarget.split(":");
+		var newTargetHostAndPort = newTarget.split(":");
+		if(oldTargetHostAndPort != null && newTargetHostAndPort != null){
+			routesDao.getBySource(source, function(error, oldRoute){
+				if(oldRoute != null){
+					var route = oldRoute;
+					var targets = route.targets;
+					for(var i=0; i<targets.length; i++){
+						if(targets[i].host == oldTargetHostAndPort[0] && targets[i].port == oldTargetHostAndPort[1]){
+							targets[i].host = newTargetHostAndPort[0];
+							targets[i].port = newTargetHostAndPort[1];
+							route.targets = targets;
+							break;
+						}
+					}
+					updateRoute(req, res, route, oldRoute);
+				} else {
+					res.send({error : "Route with source : "+ source +" not exists"});
+				}
+			});
+		}
+	} else {
+		res.send({error : "parameter passed are incorrect"});
+	}
+};
+
+exports.add = function(req, res){
+	var source = req.body.source;
+	var target = req.body.target;
+	
+	if(source && target != null && target.indexOf(":") > -1){
+		var targetHostAndPort = target.split(":");
+		if(targetHostAndPort != null){
+			routesDao.getBySource(source, function(error, oldRoute){
+				if(oldRoute != null){
+					var route = oldRoute;
+					var targets = route.targets;
+					var existed = false;
+					for(var i=0; i<targets.length; i++){
+						if(targets[i].host == targetHostAndPort[0] && targets[i].port == targetHostAndPort[1]){
+							existed = true;
+						}
+					}
+					if(!existed){
+						targets.push({"host" : targetHostAndPort[0], "port" : targetHostAndPort[1]});
+						route.targets = targets;
+						updateRoute(req, res, route, oldRoute);
+					} else {
+						res.send({error : "Target is already existed"});
+					}
+					
+				} else {
+					var route = {source : source, sessionType : "Non Sticky", targets : [{host : targetHostAndPort[0], port : targetHostAndPort[1]}]};
+					if(route.source && /^\d+$/.test(route.source)){
+						testPort(config.app.hostname, route.source, function(result, data){
+							if(result == "failure"){
+								saveRoute(req, res, route);
+							} else if(result == "success"){
+								res.send({error : "Port "+route.source+" is already in use or not existed"});
+							}
+						});
+					} else {
+						saveRoute(req, res, route);
+					}
+				}
+			});
+		}
+	} else {
+		res.send({error : "parameter passed are incorrect"});
+	}
+};
+
+exports.deleteTarget = function(req, res){
+	var source = req.body.source;
+	var target = req.body.target;
+	
+	if(target != null && target.indexOf(":") > -1 ){
+		var targetHostAndPort = target.split(":");
+		if(targetHostAndPort != null){
+			routesDao.getBySource(source, function(error, result){
+				var oldRoute = result;
+				if(oldRoute != null){
+					var targets = oldRoute.targets;
+					var newTargets = [];
+					for(var i=0; i<targets.length; i++){
+						if(!(targets[i].host == targetHostAndPort[0] && targets[i].port == targetHostAndPort[1])){
+							newTargets.push(targets[i]);
+						}
+					}
+					var route = {source : "", targets : [], sessionType : ""};
+					route.source = oldRoute.source;
+					route.targets = targets;
+					route.sessionType = oldRoute.sessionType;
+					
+					oldRoute.targets = newTargets;
+					updateRoute(req, res, oldRoute, route);
+				} else {
+					res.send({error : "Route with source : "+ source +" not exists"});
+				}
+			});
+		}
+	} else {
+		res.send({error : "parameter passed are incorrect"});
+	}
+};
+
+
 exports.deleteRoute = function(req, res){
 	routesDao.findById(req.body.id, function(error, result){
 		if(result){
 			routesDao.deleteById(req.body.id, function(error, deletedData) {
-				if(error){
+				if(error || deletedData == 0){
 					res.send("Error");
 				} else {
 					var options = {oldSource : result.source};
@@ -86,13 +199,51 @@ exports.deleteRoute = function(req, res){
 						if(err){
 							res.send(err);
 						} else {
-							res.send({id : data});
+							res.send({id : deletedData});
 						}
 					});
 				}
 			});
 		}
 	});
+};
+
+exports.deleteRouteBySource = function(req, res){
+	var source = req.body.source;
+	if(source != null){
+		routesDao.findBySource(source, function(error, result){
+			if(result){
+				routesDao.deleteById(result._id, function(error, deletedData) {
+					if(error || deletedData == 0){
+						res.send("Error");
+					} else {
+						var options = {oldSource : result.source};
+						startServer(options);
+						var targets = result.targets;
+						async.eachSeries(targets, function(target, done){
+							targetsDao.deleteById(target.id, function(error, data){
+								if(error){
+									done("Error", null);
+								} else {
+									done(null, deletedData);
+								}
+							});
+						}, function(err, data){
+							if(err){
+								res.send(err);
+							} else {
+								res.send({id : deletedData});
+							}
+						});
+					}
+				});
+			} else {
+				res.send({error : "Source with name " + source + " not existed"});
+			}
+		});
+	} else {
+		res.send({error : "parameter passed is incorrect"});
+	}
 };
 
 exports.getAllRoutes = function(req, res) {
@@ -143,7 +294,7 @@ function saveRoute(req, res, route){
 							} else {
 								var options = {newSource : jsonData.source};
 								startServer(options);
-								res.send({route : data[0]});
+								res.send({id : data[0]._id});
 							}
 						});
 					}

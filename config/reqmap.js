@@ -39,4 +39,18 @@ module.exports = function(app, db, passport, auth) {
 	app.get('/isAuthenticated', function(req, res){
 		res.send(req.isAuthenticated() ? req.user : '0');
 	});
+	
+	app.get('/api/routes/isReachable', function(req, res){
+		res.send("success");
+	});
+	app.post('/api/routes/save', passport.authenticate('basic', { session: false }), routes.save);
+	app.post('/api/routes/update', passport.authenticate('basic', { session: false }), routes.update);
+	app.post('/api/routes/delete', passport.authenticate('basic', { session: false }), routes.deleteRoute);
+	app.get('/api/routes/allRoutes', passport.authenticate('basic', { session: false }), routes.getAllRoutes);
+	app.post('/api/target/updateConfig', passport.authenticate('basic', { session: false }), targets.updateTargetConfig);
+	
+	app.post('/api/routes/updateTarget', passport.authenticate('basic', { session: false }), routes.updateTarget);
+	app.post('/api/routes/add', passport.authenticate('basic', { session: false }), routes.add);
+	app.post('/api/routes/deleteRouteBySource', passport.authenticate('basic', { session: false }), routes.deleteRouteBySource);
+	app.post('/api/routes/deleteTarget', passport.authenticate('basic', { session: false }), routes.deleteTarget);
 };

@@ -3,6 +3,7 @@
  */
 
 var LocalStrategy = require('passport-local').Strategy;
+var BasicStrategy = require('passport-http').BasicStrategy;
 var userDao = require("../dao/user");
 
 module.exports = function(passport, db, config) {
@@ -51,6 +52,25 @@ module.exports = function(passport, db, config) {
 			return done(null, user);
 		});
 	}));
+	
+	passport.use(new BasicStrategy(
+		  function(username, password, done) {
+				userDao.findOne({
+					username : username,
+					password : password
+				}, function(err, user) {
+					if (err) {
+						return done(err);
+					}
+					if (!user) {
+						return done(null, false, {
+							message : 'Incorrect username.'
+						});
+					}
+					return done(null, user);
+				});
+		  }
+	));
 
 	passport.serializeUser(function(user, done) {
 		done(null, user._id);

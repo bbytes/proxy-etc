@@ -65,6 +65,14 @@ exports.findById = function(id, callback) {
 	});
 };
 
+exports.findBySource = function(source, callback) {
+	collection.findOne({
+		source : source
+	}, function(error, result) {
+		callback(error, result);
+	});
+};
+
 exports.getAll = function(callback) {
 	collection.find().toArray(function(error, result) {
 		callback(error, result);

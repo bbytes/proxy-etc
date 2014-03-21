@@ -17,6 +17,7 @@
     "jsonfile" : "latest",
     "request" : "latest",
     "async" : "latest",
-    "mailgun" : "latest"
+    "mailgun" : "latest",
+    "passport-http" : "latest"
    }
 }
